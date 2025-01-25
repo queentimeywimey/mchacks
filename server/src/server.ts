@@ -19,19 +19,24 @@ app.use(express.json());
 
 // In-memory storage
 const patients: Patient[] = [];
-
-// Calculate estimated wait time based on triage level and patients ahead
-const calculateWaitTime = (triageLevel: 1 | 2 | 3 | 4 | 5): number => {
-    const patientsAhead = patients.filter(p => p.triageLevel <= triageLevel).length;
-    return TRIAGE_WAIT_TIMES[triageLevel] + (patientsAhead * 5); // Add 5 minutes for each patient ahead
-};
+const betweenTime = 5;
 
 // Update wait times for all patients
 const updateWaitTimes = () => {
-    patients.forEach(patient => {
-        patient.estimatedWaitTime = calculateWaitTime(patient.triageLevel);
-    });
+    for(var i = 0; i < patients.length; i++){
+        patients[i].estimatedWaitTime = i * betweenTime;
+    }
 };
+
+const updateQueue = (p: Patient) => {
+    for(var i = 0; i < patients.length; i++){
+        if (p.triageLevel > patients[i].triageLevel){
+            patients.splice(i, 0, p);
+            return;
+        }
+    }
+    patients.push(p)
+}
 
 // Socket.IO connection handling
 io.on('connection', (socket: any) => {
@@ -52,10 +57,10 @@ io.on('connection', (socket: any) => {
             triageLevel: data.triageLevel,
             registrationTime: new Date(),
             lastUpdated: new Date(),
-            estimatedWaitTime: calculateWaitTime(data.triageLevel)
+            estimatedWaitTime: -1
         };
         
-        patients.push(newPatient);
+        updateQueue(newPatient);
         updateWaitTimes();
         io.emit('patients-updated', patients);
         callback({ success: true, patientId: newPatient.id });
@@ -96,4 +101,4 @@ io.on('connection', (socket: any) => {
 const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-});
+})
