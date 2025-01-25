@@ -30,7 +30,7 @@ const updateWaitTimes = () => {
 
 const updateQueue = (p: Patient) => {
     for(var i = 0; i < patients.length; i++){
-        if (p.triageLevel > patients[i].triageLevel){
+        if (p.triageLevel < patients[i].triageLevel){
             patients.splice(i, 0, p);
             return;
         }
