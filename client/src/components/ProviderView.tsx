@@ -155,6 +155,7 @@ export const ProviderView: React.FC = () => {
                                 <Th>Symptoms</Th>
                                 <Th>Wait Time</Th>
                                 <Th>Actions</Th>
+                                <Th>ID</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
@@ -187,6 +188,7 @@ export const ProviderView: React.FC = () => {
                                                 Remove
                                             </Button>
                                         </Td>
+                                        <Td>{patient.id}</Td>
                                     </Tr>
                                 ))}
                         </Tbody>
