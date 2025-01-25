@@ -66,6 +66,22 @@ io.on('connection', (socket: any) => {
         callback({ success: true, patientId: newPatient.id });
     });
 
+    // Update patient triage level
+    socket.on('update-triage-level', (data: { patientId: string, triageLevel: 1 | 2 | 3 | 4 | 5 }) => {
+        const patient = patients.find(p => p.id === data.patientId);
+        if (patient) {
+            const index = patients.findIndex(p => p.id === data.patientId);
+            if (index !== -1) {
+                patients.splice(index, 1);
+                patient.triageLevel = data.triageLevel;
+                patient.lastUpdated = new Date();
+                updateQueue(patient);
+                updateWaitTimes();
+                io.emit('patients-updated', patients);
+            }
+        }
+    });
+
     // Update patient symptoms
     socket.on('update-symptoms', (data: PatientUpdate) => {
         const patient = patients.find(p => p.id === data.id);

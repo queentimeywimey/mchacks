@@ -27,6 +27,7 @@ export const ProviderView: React.FC = () => {
         authenticateProvider,
         addPatient,
         removePatient,
+        updateTriageLevel,
         patients
     } = useSocket();
 
@@ -165,17 +166,25 @@ export const ProviderView: React.FC = () => {
                                     <Tr key={patient.id}>
                                         <Td>{patient.name}</Td>
                                         <Td>
-                                            <Badge
-                                                colorScheme={
+                                            <Select
+                                                value={patient.triageLevel}
+                                                onChange={(e) => updateTriageLevel(patient.id, Number(e.target.value) as 1 | 2 | 3 | 4 | 5)}
+                                                bg={
                                                     patient.triageLevel <= 2
-                                                        ? 'red'
+                                                        ? 'red.100'
                                                         : patient.triageLevel === 3
-                                                        ? 'yellow'
-                                                        : 'green'
+                                                        ? 'yellow.100'
+                                                        : 'green.100'
                                                 }
+                                                size="sm"
+                                                width="250px"
                                             >
-                                                {patient.triageLevel} - {TRIAGE_LEVELS[patient.triageLevel]}
-                                            </Badge>
+                                                {Object.entries(TRIAGE_LEVELS).map(([level, description]) => (
+                                                    <option key={level} value={level}>
+                                                        {level} - {description}
+                                                    </option>
+                                                ))}
+                                            </Select>
                                         </Td>
                                         <Td>{patient.symptoms.join(', ')}</Td>
                                         <Td>{patient.estimatedWaitTime} mins</Td>
