@@ -13,7 +13,7 @@ function App() {
         <Box minH="100vh" bg="gray.50">
           <Box bg="blue.500" color="white" p={4} shadow="md">
             <Flex maxW="1200px" mx="auto" justify="space-between" align="center">
-              <Heading size="lg">Hospital Waiting Room</Heading>
+              <Heading size="lg">Welcome to Springfield Hospital</Heading>
               <Flex gap={4}>
                 <Button
                   colorScheme={view === 'patient' ? 'whiteAlpha' : 'blue'}

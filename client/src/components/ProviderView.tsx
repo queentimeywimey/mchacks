@@ -16,7 +16,6 @@ import {
     Tr,
     Th,
     Td,
-    Badge,
 } from '@chakra-ui/react';
 import { useSocket } from '../contexts/SocketContext';
 import { TRIAGE_LEVELS, TriageLevel } from '../types';
@@ -169,15 +168,51 @@ export const ProviderView: React.FC = () => {
                                             <Select
                                                 value={patient.triageLevel}
                                                 onChange={(e) => updateTriageLevel(patient.id, Number(e.target.value) as 1 | 2 | 3 | 4 | 5)}
+                                                variant="filled"
+                                                colorScheme = {patient.triageLevel === 1
+                                                                    ? 'blue.100'
+                                                                    : patient.triageLevel === 2
+                                                                    ? 'red.100'
+                                                                    : patient.triageLevel === 3
+                                                                    ? 'yellow.100'
+                                                                    : patient.triageLevel === 4
+                                                                    ? 'green.100'
+                                                                    : 'gray.100'}
                                                 bg={
-                                                    patient.triageLevel <= 2
+                                                    patient.triageLevel === 1
+                                                        ? 'blue.100'
+                                                        : patient.triageLevel === 2
                                                         ? 'red.100'
                                                         : patient.triageLevel === 3
                                                         ? 'yellow.100'
-                                                        : 'green.100'
+                                                        : patient.triageLevel === 4
+                                                        ? 'green.100'
+                                                        : 'gray.100'
                                                 }
+                                                _hover={{
+                                                    bg: patient.triageLevel === 1
+                                                        ? 'blue.200'
+                                                        : patient.triageLevel === 2
+                                                        ? 'red.200'
+                                                        : patient.triageLevel === 3
+                                                        ? 'yellow.200'
+                                                        : patient.triageLevel === 4
+                                                        ? 'green.200'
+                                                        : 'gray.200'
+                                                }}
                                                 size="sm"
-                                                width="250px"
+                                                width="275px"
+                                                borderRadius="md"
+                                                fontWeight="bold"
+                                                color = {patient.triageLevel === 1
+                                                            ? 'blue.900'
+                                                            : patient.triageLevel === 2
+                                                            ? 'red.900'
+                                                            : patient.triageLevel === 3
+                                                            ? 'yellow.900'
+                                                            : patient.triageLevel === 4
+                                                            ? 'green.900'
+                                                            : 'gray.900'}
                                             >
                                                 {Object.entries(TRIAGE_LEVELS).map(([level, description]) => (
                                                     <option key={level} value={level}>

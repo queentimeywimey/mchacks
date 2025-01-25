@@ -12,6 +12,17 @@ import {
     Badge,
     Textarea,
 } from '@chakra-ui/react';
+
+import {
+    StepsCompletedContent,
+    StepsContent,
+    StepsItem,
+    StepsList,
+    StepsNextTrigger,
+    StepsPrevTrigger,
+    StepsRoot,
+  } from "./ui/steps"
+
 import { useSocket } from '../contexts/SocketContext';
 import { Patient, TRIAGE_LEVELS } from '../types';
 
@@ -108,11 +119,15 @@ export const PatientView: React.FC = () => {
                     <Text fontSize="2xl" mb={2}>Welcome, {patient.name}</Text>
                     <Badge
                         colorScheme={
-                            patient.triageLevel <= 2
+                            patient.triageLevel === 1
+                                ? 'blue'
+                                : patient.triageLevel === 2
                                 ? 'red'
                                 : patient.triageLevel === 3
                                 ? 'yellow'
-                                : 'green'
+                                : patient.triageLevel === 4
+                                ? 'green'
+                                : 'gray'
                         }
                         fontSize="md"
                         p={2}
