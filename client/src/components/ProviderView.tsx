@@ -20,7 +20,6 @@ import {
     GridItem,
     Editable,
     EditableInput,
-    EditableTextarea,
     EditablePreview,
     Tabs,
     TabList,

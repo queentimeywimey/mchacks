@@ -138,19 +138,19 @@ export const PatientView: React.FC = () => {
             <Stack spacing={6} maxW="600px" mx="auto">
                 <Box>
                     <Text fontSize="2xl" mb={2}>Welcome, {patient.name}</Text>
-                    <HStack spacing={4}>
-                        <Progress hasStripe value={50} mb={2}
-                    colorScheme={
-                        patient.triageLevel === 1
-                            ? 'blue'
-                            : patient.triageLevel === 2
-                            ? 'red'
-                            : patient.triageLevel === 3
-                            ? 'yellow'
-                            : patient.triageLevel === 4
-                            ? 'green'
-                            : 'gray'
+                    <Progress hasStripe value={50} my ={4}
+                        colorScheme={
+                            patient.triageLevel === 1
+                                ? 'blue'
+                                : patient.triageLevel === 2
+                                ? 'red'
+                                : patient.triageLevel === 3
+                                ? 'yellow'
+                                : patient.triageLevel === 4
+                                ? 'green'
+                                : 'gray'
                     }/>
+                    <HStack spacing={4}>
                     <Badge
                             colorScheme={
                                 patient.triageLevel <= 2
