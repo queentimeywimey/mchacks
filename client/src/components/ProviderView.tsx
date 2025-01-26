@@ -162,7 +162,7 @@ export const ProviderView: React.FC = () => {
                 </GridItem>
 
 
-                <GridItem colStart={12} colEnd={21}  bg='papayawhip'>
+                <GridItem colStart={12} colEnd={21}>
                     <Stack spacing={6}>
                         <Box>
                             <Text fontSize="2xl" mb={3}>Report Average Waiting Time</Text>
