@@ -12,7 +12,7 @@ import {
     Badge,
     Textarea,
     HStack,
-    Progress
+    Progress,
     Step,
     StepDescription,
     StepIcon,

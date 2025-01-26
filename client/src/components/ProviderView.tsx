@@ -261,6 +261,7 @@ export const ProviderView: React.FC = () => {
                                     <Button colorScheme="blue" onClick={handleAddPatient}>
                                         Add Patient
                                     </Button>
+                                </Stack>
                             </Box>
                         </Stack>
                     </GridItem>
@@ -299,7 +300,7 @@ export const ProviderView: React.FC = () => {
                 </Grid>
             </Box>                       
 
-                <Box>
+            <Box>
                     <Text fontSize="2xl" mb={4}>Current Patients</Text>
                     <Tabs>
                         <TabList>
@@ -325,8 +326,8 @@ export const ProviderView: React.FC = () => {
                         </TabPanels>
                     </Tabs>
                 </Box>
-            </Stack>
-            </Box>
-    
+        </Box>
+       
+        
     );
 };
