@@ -232,7 +232,7 @@ export const ProviderView: React.FC = () => {
                                                         : 'gray.200'
                                                 }}
                                                 size="sm"
-                                                width="275px"
+                                                width="220px"
                                                 borderRadius="md"
                                                 fontWeight="bold"
                                                 color = {patient.triageLevel === 1
