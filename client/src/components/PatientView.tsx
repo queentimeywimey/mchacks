@@ -11,7 +11,7 @@ import {
     VStack,
     Badge,
     Textarea,
-    HStack,
+    HStack
 } from '@chakra-ui/react';
 
 import { useSocket } from '../contexts/SocketContext';
@@ -109,7 +109,19 @@ export const PatientView: React.FC = () => {
                 <Box>
                     <Text fontSize="2xl" mb={2}>Welcome, {patient.name}</Text>
                     <HStack spacing={4}>
-                        <Badge
+                        <Progress hasStripe value={50} mb={2}
+                    colorScheme={
+                        patient.triageLevel === 1
+                            ? 'blue'
+                            : patient.triageLevel === 2
+                            ? 'red'
+                            : patient.triageLevel === 3
+                            ? 'yellow'
+                            : patient.triageLevel === 4
+                            ? 'green'
+                            : 'gray'
+                    }/>
+                    <Badge
                             colorScheme={
                                 patient.triageLevel <= 2
                                     ? 'red'
