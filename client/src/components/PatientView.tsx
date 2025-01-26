@@ -13,16 +13,6 @@ import {
     Textarea,
 } from '@chakra-ui/react';
 
-import {
-    StepsCompletedContent,
-    StepsContent,
-    StepsItem,
-    StepsList,
-    StepsNextTrigger,
-    StepsPrevTrigger,
-    StepsRoot,
-  } from "./ui/steps"
-
 import { useSocket } from '../contexts/SocketContext';
 import { Patient, TRIAGE_LEVELS } from '../types';
 
@@ -131,8 +121,11 @@ export const PatientView: React.FC = () => {
                         }
                         fontSize="md"
                         p={2}
+                        px={3}
+                        textTransform="none"
+                        borderRadius="lg"
                     >
-                        Triage Level: {patient.triageLevel} - {TRIAGE_LEVELS[patient.triageLevel]}
+                        Triage Level: {patient.triageLevel} - {TRIAGE_LEVELS[patient.triageLevel]} 
                     </Badge>
                 </Box>
 

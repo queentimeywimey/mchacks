@@ -169,15 +169,6 @@ export const ProviderView: React.FC = () => {
                                                 value={patient.triageLevel}
                                                 onChange={(e) => updateTriageLevel(patient.id, Number(e.target.value) as 1 | 2 | 3 | 4 | 5)}
                                                 variant="filled"
-                                                colorScheme = {patient.triageLevel === 1
-                                                                    ? 'blue.100'
-                                                                    : patient.triageLevel === 2
-                                                                    ? 'red.100'
-                                                                    : patient.triageLevel === 3
-                                                                    ? 'yellow.100'
-                                                                    : patient.triageLevel === 4
-                                                                    ? 'green.100'
-                                                                    : 'gray.100'}
                                                 bg={
                                                     patient.triageLevel === 1
                                                         ? 'blue.100'
