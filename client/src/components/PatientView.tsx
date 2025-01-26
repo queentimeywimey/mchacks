@@ -26,7 +26,7 @@ import {
 } from '@chakra-ui/react';
 
 import { useSocket } from '../contexts/SocketContext';
-import { Patient, TRIAGE_LEVELS, PATIENT_STATUS_LABELS } from '../types';
+import { Patient, TRIAGE_LEVELS, PATIENT_STATUS_LABELS, PatientStatus} from '../types';
 const four_steps = [
     { title: 'Registration and Triage', description: 'Get registered into the management system and get assigned a triage.' },
     { title: 'The First Wait', description: 'Wait to be seen by a doctor.' },
@@ -184,7 +184,19 @@ export const PatientView: React.FC = () => {
                 </Box>
 
                 <Box>
-                <Stepper index={activeStep} orientation='vertical' height='400px' gap='0'>
+                <Stepper index={patient.status === PatientStatus.WAITING
+                            ? 1
+                            : patient.status === PatientStatus.IN_APPOINTMENT
+                            ? 2
+                            : patient.status === PatientStatus.AWAITING_RESULTS
+                            ? 3
+                            : patient.status === PatientStatus.READY_FOR_DISCHARGE
+                            ? 4
+                            : 1} 
+                            orientation='vertical' 
+                            height='400px' 
+                            gap='0'
+                            >
                     {four_steps.map((step, index) => (
                         <Step key={index}>
                         <StepIndicator>
