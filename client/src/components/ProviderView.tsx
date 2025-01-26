@@ -22,6 +22,7 @@ import {
     EditableInput,
     EditableTextarea,
     EditablePreview,
+    Center,
 } from '@chakra-ui/react';
 import { useSocket } from '../contexts/SocketContext';
 import { TRIAGE_LEVELS, TriageLevel } from '../types';
@@ -108,11 +109,11 @@ export const ProviderView: React.FC = () => {
             <Box>
                 <Grid
                     h='390px'
-                    templateRows='repeat(2, 1fr)'
+                    templateRows='repeat(20, 1fr)'
                     templateColumns='repeat(20, 1fr)'
                     gap={4}
                     >
-                    <GridItem colStart={1} colEnd={12} >
+                    <GridItem colSpan={11} rowSpan={18}>
                         <Stack spacing={6}>
                             <Box>
                                 <Text fontSize="2xl" mb={3}>Add New Patient</Text>
@@ -161,16 +162,35 @@ export const ProviderView: React.FC = () => {
                         </Stack>
                     </GridItem>
 
-                    <GridItem colStart={12} colEnd={21}>
-                        <Stack spacing={6}>
+                    <GridItem colSpan={9} rowSpan={7}>
+                    
                             <Box>
-                                <Text fontSize="2xl" mb={3}>Report Average Waiting Time</Text>
-                                <Editable defaultValue='hi' mb={3}>
-                                <EditablePreview />
+                                <Center>
+                                <Text fontSize="2xl" mb={3}>Report: Average Waiting Time</Text>
+                                </Center>
+                                <Center>
+                                <Editable fontSize="2xl" defaultValue='x minutes' mb={3}>
+                                <EditablePreview>
+                                    bruh
+                                </EditablePreview>
                                 <EditableInput />
                                 </Editable>
+                                </Center>
                             </Box>
-                        </Stack>
+                       
+                    </GridItem>
+
+                    <GridItem colStart={12} colEnd={21}>
+                      
+                            <Box>
+                            <Center>
+                                <Text fontSize="2xl" mb={3}>Total Number of Patients</Text>
+                                </Center>
+                            <Center>
+                                <Text fontSize="2xl" mb={3}>{patients.length}</Text>
+                                </Center>
+                            </Box>
+                   
                     </GridItem>
 
                 </Grid>

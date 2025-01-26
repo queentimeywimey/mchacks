@@ -12,10 +12,34 @@ import {
     Badge,
     Textarea,
     Progress,
+    Step,
+    StepDescription,
+    StepIcon,
+    StepIndicator,
+    StepNumber,
+    StepSeparator,
+    StepStatus,
+    StepTitle,
+    Stepper,
+    useSteps,
 } from '@chakra-ui/react';
 
 import { useSocket } from '../contexts/SocketContext';
 import { Patient, TRIAGE_LEVELS } from '../types';
+const four_steps = [
+    { title: 'Registration and Triage', description: 'Get registered into the management system and get assigned a triage.' },
+    { title: 'The First Wait', description: 'Wait to be seen by a doctor.' },
+    { title: 'Initial Assessment', description: 'Get examined by a doctor.' },
+    { title: 'Treatment & Next Steps', description: 'A treatment plan is drawn up you are either treated and discharged, or admitted into hospital' },
+  ]
+const five_steps = [
+    { title: 'Registration and Triage', description: 'Get registered into the management system and get assigned a triage.' },
+    { title: 'The First Wait', description: 'Wait to be seen by a doctor.' },
+    { title: 'Initial Assessment', description: 'Get examined by a doctor, who may order tests.' },
+    { title: 'Investigation', description: 'Await lab results to arrive.' },
+    { title: 'Review & Next Steps', description: 'Lab results are reviewed and you are either treated and discharged, or admitted into hospital' },
+  ]
+
 
 export const PatientView: React.FC = () => {
     const { getPatient, updateSymptoms } = useSocket();
@@ -24,6 +48,10 @@ export const PatientView: React.FC = () => {
     const [newSymptoms, setNewSymptoms] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const toast = useToast();
+    const { activeStep } = useSteps({
+        index: 1,
+        count: four_steps.length,
+      })
 
     const handleLookup = async () => {
         setIsLoading(true);
@@ -103,6 +131,7 @@ export const PatientView: React.FC = () => {
         );
     }
 
+
     return (
         <Box p={4}>
             <Stack spacing={6} maxW="600px" mx="auto">
@@ -147,6 +176,29 @@ export const PatientView: React.FC = () => {
                 </Box>
 
                 <Box>
+                <Stepper index={activeStep} orientation='vertical' height='400px' gap='0'>
+                    {four_steps.map((step, index) => (
+                        <Step key={index}>
+                        <StepIndicator>
+                            <StepStatus
+                            complete={<StepIcon />}
+                            incomplete={<StepNumber />}
+                            active={<StepNumber />}
+                            />
+                        </StepIndicator>
+
+                        <Box flexShrink='0'>
+                            <StepTitle>{step.title}</StepTitle>
+                            <StepDescription>{step.description}</StepDescription>
+                        </Box>
+
+                        <StepSeparator />
+                        </Step>
+                    ))}
+                </Stepper>
+                </Box>
+
+                <Box>
                     <Text fontSize="xl" mb={4}>Update Your Symptoms</Text>
                     <FormControl>
                         <FormLabel>Current Symptoms</FormLabel>
@@ -171,7 +223,7 @@ export const PatientView: React.FC = () => {
                         Last Updated: {new Date(patient.lastUpdated).toLocaleString()}
                     </Text>
                     <Text fontSize="sm" color="gray.500">
-                        Patient ID: {patient.id}
+                        Your Patient ID: {patient.id}
                     </Text>
                 </Box>
             </Stack>
