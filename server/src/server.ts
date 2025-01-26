@@ -84,9 +84,11 @@ io.on('connection', (socket: any) => {
                 io.emit('patients-updated', patients);
             } else
             if (index !== -1) {
+                if (patient.status === PatientStatus.WAITING){
+                    patient.estimatedWaitTime = 0;
+                }
                 patient.status = data.status;
                 patient.lastUpdated = new Date();
-                updateWaitTimes();
                 io.emit('patients-updated', patients);
             }
         }
