@@ -161,7 +161,9 @@ export const PatientView: React.FC = () => {
                             }
                             fontSize="md"
                             p={2}
+                            px={3}
                             textTransform="none"
+                            borderRadius="md"
                         >
                             Triage Level: {patient.triageLevel} - {TRIAGE_LEVELS[patient.triageLevel]}
                         </Badge>
@@ -169,7 +171,9 @@ export const PatientView: React.FC = () => {
                             colorScheme="purple"
                             fontSize="md"
                             p={2}
+                            px={3}
                             textTransform="none"
+                            borderRadius="md"
                         >
                             Status: {PATIENT_STATUS_LABELS[patient.status]}
                         </Badge>

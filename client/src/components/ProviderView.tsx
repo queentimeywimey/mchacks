@@ -192,6 +192,8 @@ export const ProviderView: React.FC = () => {
                                     variant="filled"
                                     size="sm"
                                     width="200px"
+                                    borderRadius="md"
+                                    fontWeight="medium"
                                 >
                                     {Object.entries(PATIENT_STATUS_LABELS).map(([status, label]) => (
                                         <option key={status} value={status}>
