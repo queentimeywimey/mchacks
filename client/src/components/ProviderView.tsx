@@ -16,6 +16,12 @@ import {
     Tr,
     Th,
     Td,
+    Grid,
+    GridItem,
+    Editable,
+    EditableInput,
+    EditableTextarea,
+    EditablePreview,
 } from '@chakra-ui/react';
 import { useSocket } from '../contexts/SocketContext';
 import { TRIAGE_LEVELS, TriageLevel } from '../types';
@@ -98,52 +104,77 @@ export const ProviderView: React.FC = () => {
     }
 
     return (
-        <Box p={4}>
-            <Stack spacing={6}>
-                <Box>
-                    <Text fontSize="2xl" mb={4}>Add New Patient</Text>
-                    <Stack spacing={4} maxW="600px">
-                        <FormControl>
-                            <FormLabel>Patient Name</FormLabel>
-                            <Input
-                                value={newPatient.name}
-                                onChange={(e) =>
-                                    setNewPatient({ ...newPatient, name: e.target.value })
-                                }
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Symptoms (comma-separated)</FormLabel>
-                            <Input
-                                value={newPatient.symptoms}
-                                onChange={(e) =>
-                                    setNewPatient({ ...newPatient, symptoms: e.target.value })
-                                }
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Triage Level</FormLabel>
-                            <Select
-                                value={newPatient.triageLevel}
-                                onChange={(e) =>
-                                    setNewPatient({
-                                        ...newPatient,
-                                        triageLevel: e.target.value as unknown as TriageLevel,
-                                    })
-                                }
-                            >
-                                {Object.entries(TRIAGE_LEVELS).map(([level, description]) => (
-                                    <option key={level} value={level}>
-                                        {level} - {description}
-                                    </option>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <Button colorScheme="blue" onClick={handleAddPatient}>
-                            Add Patient
-                        </Button>
-                    </Stack>
-                </Box>
+        <Box p={4} m={2}>
+            <Box>
+                <Grid
+                    h='390px'
+                    templateRows='repeat(2, 1fr)'
+                    templateColumns='repeat(20, 1fr)'
+                    gap={4}
+                    >
+                    <GridItem colStart={1} colEnd={12} >
+                        <Stack spacing={6}>
+                            <Box>
+                                <Text fontSize="2xl" mb={3}>Add New Patient</Text>
+                                <Stack spacing={4} maxW="600px" m={2}>
+                                    <FormControl>
+                                        <FormLabel>Patient Name</FormLabel>
+                                        <Input
+                                            value={newPatient.name}
+                                            onChange={(e) =>
+                                                setNewPatient({ ...newPatient, name: e.target.value })
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormControl>
+                                        <FormLabel>Symptoms (comma-separated)</FormLabel>
+                                        <Input
+                                            value={newPatient.symptoms}
+                                            onChange={(e) =>
+                                                setNewPatient({ ...newPatient, symptoms: e.target.value })
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormControl>
+                                        <FormLabel>Triage Level</FormLabel>
+                                        <Select
+                                            value={newPatient.triageLevel}
+                                            onChange={(e) =>
+                                                setNewPatient({
+                                                    ...newPatient,
+                                                    triageLevel: e.target.value as unknown as TriageLevel,
+                                                })
+                                            }
+                                        >
+                                            {Object.entries(TRIAGE_LEVELS).map(([level, description]) => (
+                                                <option key={level} value={level}>
+                                                    {level} - {description}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                    <Button colorScheme="blue" onClick={handleAddPatient}>
+                                        Add Patient
+                                    </Button>
+                                </Stack>
+                            </Box>
+                        </Stack>
+                    </GridItem>
+
+                    <GridItem colStart={12} colEnd={21}>
+                        <Stack spacing={6}>
+                            <Box>
+                                <Text fontSize="2xl" mb={3}>Report Average Waiting Time</Text>
+                                <Editable defaultValue='hi' mb={3}>
+                                <EditablePreview />
+                                <EditableInput />
+                                </Editable>
+                            </Box>
+                        </Stack>
+                    </GridItem>
+
+                </Grid>
+            </Box>                       
 
                 <Box>
                     <Text fontSize="2xl" mb={4}>Current Patients</Text>
@@ -238,7 +269,6 @@ export const ProviderView: React.FC = () => {
                         </Tbody>
                     </Table>
                 </Box>
-            </Stack>
         </Box>
     );
 };

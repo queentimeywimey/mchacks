@@ -13,16 +13,6 @@ import {
     Textarea,
 } from '@chakra-ui/react';
 
-import {
-    StepsCompletedContent,
-    StepsContent,
-    StepsItem,
-    StepsList,
-    StepsNextTrigger,
-    StepsPrevTrigger,
-    StepsRoot,
-  } from "./ui/steps"
-
 import { useSocket } from '../contexts/SocketContext';
 import { Patient, TRIAGE_LEVELS } from '../types';
 
