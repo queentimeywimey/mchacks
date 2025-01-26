@@ -2,14 +2,16 @@ export enum PatientStatus {
     WAITING = 'WAITING',
     IN_APPOINTMENT = 'IN_APPOINTMENT',
     AWAITING_RESULTS = 'AWAITING_RESULTS',
-    READY_FOR_DISCHARGE = 'READY_FOR_DISCHARGE'
+    READY_FOR_DISCHARGE = 'READY_FOR_DISCHARGE',
+    DISCHARGED = 'DISCHARGED'
 }
 
 export const PATIENT_STATUS_LABELS = {
     [PatientStatus.WAITING]: 'Waiting',
     [PatientStatus.IN_APPOINTMENT]: 'In Appointment',
     [PatientStatus.AWAITING_RESULTS]: 'Awaiting Results',
-    [PatientStatus.READY_FOR_DISCHARGE]: 'Ready for Discharge'
+    [PatientStatus.READY_FOR_DISCHARGE]: 'Ready for Discharge',
+    [PatientStatus.DISCHARGED]: 'Discharge'
 };
 
 export interface Patient {

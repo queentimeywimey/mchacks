@@ -30,7 +30,6 @@ export const ProviderView: React.FC = () => {
         isProvider,
         authenticateProvider,
         addPatient,
-        removePatient,
         updateTriageLevel,
         updateStatus,
         patients
@@ -118,7 +117,7 @@ export const ProviderView: React.FC = () => {
                     <Th>Symptoms</Th>
                     <Th>Wait Time</Th>
                     <Th>Status</Th>
-                    <Th>Actions</Th>
+                    <Th>Patient ID</Th>
                 </Tr>
             </Thead>
             <Tbody>
@@ -134,23 +133,40 @@ export const ProviderView: React.FC = () => {
                                     onChange={(e) => updateTriageLevel(patient.id, Number(e.target.value) as 1 | 2 | 3 | 4 | 5)}
                                     variant="filled"
                                     bg={
-                                        patient.triageLevel <= 2
+                                        patient.triageLevel === 1
+                                            ? 'blue.100'
+                                            : patient.triageLevel === 2
                                             ? 'red.100'
                                             : patient.triageLevel === 3
                                             ? 'yellow.100'
-                                            : 'green.100'
+                                            : patient.triageLevel === 4
+                                            ? 'green.100'
+                                            : 'gray.100'
                                     }
                                     _hover={{
-                                        bg: patient.triageLevel <= 2
-                                            ? 'red.200'
-                                            : patient.triageLevel === 3
-                                            ? 'yellow.200'
-                                            : 'green.200'
+                                        bg: patient.triageLevel === 1
+                                                ? 'blue.200'
+                                                : patient.triageLevel === 2
+                                                ? 'red.200'
+                                                : patient.triageLevel === 3
+                                                ? 'yellow.200'
+                                                : patient.triageLevel === 4
+                                                ? 'green.200'
+                                                : 'gray.200'
                                     }}
                                     size="sm"
                                     width="250px"
                                     borderRadius="md"
                                     fontWeight="medium"
+                                    color = {patient.triageLevel === 1
+                                                ? 'blue.800'
+                                                : patient.triageLevel === 2
+                                                ? 'red.800'
+                                                : patient.triageLevel === 3
+                                                ? 'yellow.800'
+                                                : patient.triageLevel === 4
+                                                ? 'green.800'
+                                                : 'gray.800'}
                                 >
                                     {Object.entries(TRIAGE_LEVELS).map(([level, description]) => (
                                         <option key={level} value={level}>
@@ -177,13 +193,7 @@ export const ProviderView: React.FC = () => {
                                 </Select>
                             </Td>
                             <Td>
-                                <Button
-                                    colorScheme="red"
-                                    size="sm"
-                                    onClick={() => removePatient(patient.id)}
-                                >
-                                    Remove
-                                </Button>
+                                {patient.id}
                             </Td>
                         </Tr>
                     ))}

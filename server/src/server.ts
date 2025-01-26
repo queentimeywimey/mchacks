@@ -78,11 +78,14 @@ io.on('connection', (socket: any) => {
         const patient = patients.find(p => p.id === data.patientId);
         if (patient) {
             const index = patients.findIndex(p => p.id === data.patientId);
-            if (index !== -1) {
+            if (data.status === PatientStatus.DISCHARGED) {
                 patients.splice(index, 1);
+                updateWaitTimes();
+                io.emit('patients-updated', patients);
+            } else
+            if (index !== -1) {
                 patient.status = data.status;
                 patient.lastUpdated = new Date();
-                updateQueue(patient);
                 updateWaitTimes();
                 io.emit('patients-updated', patients);
             }
@@ -116,15 +119,6 @@ io.on('connection', (socket: any) => {
         }
     });
 
-    // Remove patient (provider only)
-    socket.on('remove-patient', (patientId: string) => {
-        const index = patients.findIndex(p => p.id === patientId);
-        if (index !== -1) {
-            patients.splice(index, 1);
-            updateWaitTimes();
-            io.emit('patients-updated', patients);
-        }
-    });
 
     // Get patient info
     socket.on('get-patient', (patientId: string, callback: (patient: Patient | null) => void) => {

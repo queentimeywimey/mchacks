@@ -11,7 +11,8 @@ import {
     VStack,
     Badge,
     Textarea,
-    HStack
+    HStack,
+    Progress
 } from '@chakra-ui/react';
 
 import { useSocket } from '../contexts/SocketContext';

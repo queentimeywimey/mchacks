@@ -12,7 +12,6 @@ interface SocketContextType {
     updateSymptoms: (update: PatientUpdate) => void;
     updateTriageLevel: (patientId: string, triageLevel: 1 | 2 | 3 | 4 | 5) => void;
     updateStatus: (patientId: string, status: PatientStatus) => void;
-    removePatient: (patientId: string) => void;
     getPatient: (patientId: string) => Promise<Patient | null>;
     patients: Patient[];
 }
@@ -86,11 +85,6 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         socket.emit('update-symptoms', update);
     };
 
-    const removePatient = (patientId: string) => {
-        if (!socket) return;
-        socket.emit('remove-patient', patientId);
-    };
-
     const getPatient = async (patientId: string): Promise<Patient | null> => {
         if (!socket) return null;
 
@@ -121,7 +115,6 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         updateSymptoms,
         updateTriageLevel,
         updateStatus,
-        removePatient,
         getPatient,
         patients
     };
