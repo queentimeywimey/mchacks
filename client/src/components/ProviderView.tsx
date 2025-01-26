@@ -27,6 +27,7 @@ import {
     Tab,
     TabPanel,
     Center,
+    HStack,
 } from '@chakra-ui/react';
 import { useSocket } from '../contexts/SocketContext';
 import { TRIAGE_LEVELS, TriageLevel, PatientStatus, PATIENT_STATUS_LABELS } from '../types';
@@ -38,6 +39,7 @@ export const ProviderView: React.FC = () => {
         addPatient,
         updateTriageLevel,
         updateStatus,
+        updateWaitTimes,
         patients
     } = useSocket();
 
@@ -269,15 +271,16 @@ export const ProviderView: React.FC = () => {
                     
                             <Box>
                                 <Center>
-                                <Text fontSize="2xl" mb={3}>Report: Average Waiting Time</Text>
+                                <Text fontSize="2xl" mb={3}>Report Average Waiting Time</Text>
                                 </Center>
                                 <Center>
-                                <Editable fontSize="2xl" defaultValue='x minutes' mb={3}>
-                                <EditablePreview>
-                                    bruh
-                                </EditablePreview>
-                                <EditableInput />
-                                </Editable>
+                                    <HStack>
+                                        <Editable fontSize="2xl" defaultValue='5' mb={3} onChange={(value) => updateWaitTimes(value)}>
+                                            <EditablePreview />
+                                        <EditableInput />
+                                        </Editable>
+                                        <Text fontSize="2xl" mb={3}> minutes</Text>
+                                    </HStack>
                                 </Center>
                             </Box>
                        

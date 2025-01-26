@@ -13,6 +13,7 @@ interface SocketContextType {
     updateTriageLevel: (patientId: string, triageLevel: 1 | 2 | 3 | 4 | 5) => void;
     updateStatus: (patientId: string, status: PatientStatus) => void;
     getPatient: (patientId: string) => Promise<Patient | null>;
+    updateWaitTimes: (input: string) => void;
     patients: Patient[];
 }
 
@@ -105,6 +106,11 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         socket.emit('update-status', { patientId, status });
     };
 
+    const updateWaitTimes = (input: string) => {
+        if (!socket) return;
+        socket.emit('update-wait-times', input);
+    }
+
     const value = {
         socket,
         isConnected,
@@ -116,6 +122,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         updateTriageLevel,
         updateStatus,
         getPatient,
+        updateWaitTimes,
         patients
     };
 

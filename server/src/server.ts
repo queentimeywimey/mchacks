@@ -19,20 +19,7 @@ app.use(express.json());
 
 // In-memory storage
 const patients: Patient[] = [];
-const betweenTime = 5;
-const four_steps = [
-    { title: 'Registration and Triage', description: 'Get registered into the management system and get assigned a triage.' },
-    { title: 'The First Wait', description: 'Wait to be seen by a doctor.' },
-    { title: 'Initial Assessment', description: 'Get examined by a doctor.' },
-    { title: 'Treatment & Next Steps', description: 'A treatment plan is drawn up you are either treated and discharged, or admitted into hospital' },
-  ]
-const five_steps = [
-    { title: 'Registration and Triage', description: 'Get registered into the management system and get assigned a triage.' },
-    { title: 'The First Wait', description: 'Wait to be seen by a doctor.' },
-    { title: 'Initial Assessment', description: 'Get examined by a doctor, who may order tests.' },
-    { title: 'Investigation', description: 'Await lab results to arrive.' },
-    { title: 'Review & Next Steps', description: 'Lab results are reviewed and you are either treated and discharged, or admitted into hospital' },
-  ]
+var betweenTime = 5;
 
 // Update wait times for all patients
 const updateWaitTimes = () => {
@@ -137,6 +124,16 @@ io.on('connection', (socket: any) => {
     socket.on('get-patient', (patientId: string, callback: (patient: Patient | null) => void) => {
         const patient = patients.find(p => p.id === patientId);
         callback(patient || null);
+    });
+
+    socket.on('update-wait-times', (input: string) => {
+        const parsed = parseInt(input, 10);
+        if (isNaN(parsed)) return;
+        else {
+            betweenTime = parsed;
+            updateWaitTimes();
+            io.emit('patients-updated', patients);
+        }
     });
 
     socket.on('disconnect', () => {
