@@ -22,18 +22,23 @@ import {
     EditableInput,
     EditableTextarea,
     EditablePreview,
+    Tabs,
+    TabList,
+    TabPanels,
+    Tab,
+    TabPanel,
     Center,
 } from '@chakra-ui/react';
 import { useSocket } from '../contexts/SocketContext';
-import { TRIAGE_LEVELS, TriageLevel } from '../types';
+import { TRIAGE_LEVELS, TriageLevel, PatientStatus, PATIENT_STATUS_LABELS } from '../types';
 
 export const ProviderView: React.FC = () => {
     const {
         isProvider,
         authenticateProvider,
         addPatient,
-        removePatient,
         updateTriageLevel,
+        updateStatus,
         patients
     } = useSocket();
 
@@ -86,23 +91,122 @@ export const ProviderView: React.FC = () => {
     if (!isProvider) {
         return (
             <Box p={4}>
-                <VStack spacing={4} maxW="400px" mx="auto">
-                    <Text fontSize="xl">Provider Login</Text>
-                    <FormControl>
-                        <FormLabel>Password</FormLabel>
-                        <Input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </FormControl>
-                    <Button colorScheme="blue" onClick={handleLogin}>
-                        Login
-                    </Button>
-                </VStack>
+                <form onSubmit={(e) => {
+                    e.preventDefault();
+                    handleLogin();
+                }}>
+                    <VStack spacing={4} maxW="400px" mx="auto">
+                        <Text fontSize="xl">Provider Login</Text>
+                        <FormControl>
+                            <FormLabel>Password</FormLabel>
+                            <Input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                autoFocus
+                            />
+                        </FormControl>
+                        <Button type="submit" colorScheme="blue">
+                            Login
+                        </Button>
+                    </VStack>
+                </form>
             </Box>
         );
     }
+
+    const renderPatientTable = (statusFilter: PatientStatus) => (
+        <Table variant="simple">
+            <Thead>
+                <Tr>
+                    <Th>Name</Th>
+                    <Th>Triage Level</Th>
+                    <Th>Symptoms</Th>
+                    <Th>Wait Time</Th>
+                    <Th>Status</Th>
+                    <Th>Patient ID</Th>
+                </Tr>
+            </Thead>
+            <Tbody>
+                {patients
+                    .filter(p => p.status === statusFilter)
+                    .sort((a, b) => a.triageLevel - b.triageLevel)
+                    .map((patient) => (
+                        <Tr key={patient.id}>
+                            <Td>{patient.name}</Td>
+                            <Td>
+                                <Select
+                                    value={patient.triageLevel}
+                                    onChange={(e) => updateTriageLevel(patient.id, Number(e.target.value) as 1 | 2 | 3 | 4 | 5)}
+                                    variant="filled"
+                                    bg={
+                                        patient.triageLevel === 1
+                                            ? 'blue.100'
+                                            : patient.triageLevel === 2
+                                            ? 'red.100'
+                                            : patient.triageLevel === 3
+                                            ? 'yellow.100'
+                                            : patient.triageLevel === 4
+                                            ? 'green.100'
+                                            : 'gray.100'
+                                    }
+                                    _hover={{
+                                        bg: patient.triageLevel === 1
+                                                ? 'blue.200'
+                                                : patient.triageLevel === 2
+                                                ? 'red.200'
+                                                : patient.triageLevel === 3
+                                                ? 'yellow.200'
+                                                : patient.triageLevel === 4
+                                                ? 'green.200'
+                                                : 'gray.200'
+                                    }}
+                                    size="sm"
+                                    width="250px"
+                                    borderRadius="md"
+                                    fontWeight="medium"
+                                    color = {patient.triageLevel === 1
+                                                ? 'blue.800'
+                                                : patient.triageLevel === 2
+                                                ? 'red.800'
+                                                : patient.triageLevel === 3
+                                                ? 'yellow.800'
+                                                : patient.triageLevel === 4
+                                                ? 'green.800'
+                                                : 'gray.800'}
+                                >
+                                    {Object.entries(TRIAGE_LEVELS).map(([level, description]) => (
+                                        <option key={level} value={level}>
+                                            {level} - {description}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </Td>
+                            <Td>{patient.symptoms.join(', ')}</Td>
+                            <Td>{patient.estimatedWaitTime} mins</Td>
+                            <Td>
+                                <Select
+                                    value={patient.status}
+                                    onChange={(e) => updateStatus(patient.id, e.target.value as PatientStatus)}
+                                    variant="filled"
+                                    size="sm"
+                                    width="200px"
+                                >
+                                    {Object.entries(PATIENT_STATUS_LABELS).map(([status, label]) => (
+                                        <option key={status} value={status}>
+                                            {label}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </Td>
+                            <Td>
+                                {patient.id}
+                            </Td>
+                        </Tr>
+                    ))}
+            </Tbody>
+        </Table>
+    );
 
     return (
         <Box p={4} m={2}>
@@ -157,7 +261,6 @@ export const ProviderView: React.FC = () => {
                                     <Button colorScheme="blue" onClick={handleAddPatient}>
                                         Add Patient
                                     </Button>
-                                </Stack>
                             </Box>
                         </Stack>
                     </GridItem>
@@ -198,97 +301,32 @@ export const ProviderView: React.FC = () => {
 
                 <Box>
                     <Text fontSize="2xl" mb={4}>Current Patients</Text>
-                    <Table variant="simple">
-                        <Thead>
-                            <Tr>
-                                <Th>Name</Th>
-                                <Th>Triage Level</Th>
-                                <Th>Symptoms</Th>
-                                <Th>Wait Time</Th>
-                                <Th>Actions</Th>
-                                <Th>ID</Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            {patients
-                                .sort((a, b) => a.triageLevel - b.triageLevel)
-                                .map((patient) => (
-                                    <Tr key={patient.id}>
-                                        <Td>{patient.name}</Td>
-                                        <Td>
-                                            <Select
-                                                value={patient.triageLevel}
-                                                onChange={(e) => updateTriageLevel(patient.id, Number(e.target.value) as 1 | 2 | 3 | 4 | 5)}
-                                                variant="filled"
-                                                colorScheme = {patient.triageLevel === 1
-                                                                    ? 'blue.100'
-                                                                    : patient.triageLevel === 2
-                                                                    ? 'red.100'
-                                                                    : patient.triageLevel === 3
-                                                                    ? 'yellow.100'
-                                                                    : patient.triageLevel === 4
-                                                                    ? 'green.100'
-                                                                    : 'gray.100'}
-                                                bg={
-                                                    patient.triageLevel === 1
-                                                        ? 'blue.100'
-                                                        : patient.triageLevel === 2
-                                                        ? 'red.100'
-                                                        : patient.triageLevel === 3
-                                                        ? 'yellow.100'
-                                                        : patient.triageLevel === 4
-                                                        ? 'green.100'
-                                                        : 'gray.100'
-                                                }
-                                                _hover={{
-                                                    bg: patient.triageLevel === 1
-                                                        ? 'blue.200'
-                                                        : patient.triageLevel === 2
-                                                        ? 'red.200'
-                                                        : patient.triageLevel === 3
-                                                        ? 'yellow.200'
-                                                        : patient.triageLevel === 4
-                                                        ? 'green.200'
-                                                        : 'gray.200'
-                                                }}
-                                                size="sm"
-                                                width="220px"
-                                                borderRadius="md"
-                                                fontWeight="bold"
-                                                color = {patient.triageLevel === 1
-                                                            ? 'blue.900'
-                                                            : patient.triageLevel === 2
-                                                            ? 'red.900'
-                                                            : patient.triageLevel === 3
-                                                            ? 'yellow.900'
-                                                            : patient.triageLevel === 4
-                                                            ? 'green.900'
-                                                            : 'gray.900'}
-                                            >
-                                                {Object.entries(TRIAGE_LEVELS).map(([level, description]) => (
-                                                    <option key={level} value={level}>
-                                                        {level} - {description}
-                                                    </option>
-                                                ))}
-                                            </Select>
-                                        </Td>
-                                        <Td>{patient.symptoms.join(', ')}</Td>
-                                        <Td>{patient.estimatedWaitTime} mins</Td>
-                                        <Td>
-                                            <Button
-                                                colorScheme="red"
-                                                size="sm"
-                                                onClick={() => removePatient(patient.id)}
-                                            >
-                                                Remove
-                                            </Button>
-                                        </Td>
-                                        <Td>{patient.id}</Td>
-                                    </Tr>
-                                ))}
-                        </Tbody>
-                    </Table>
+                    <Tabs>
+                        <TabList>
+                            <Tab>Waiting ({patients.filter(p => p.status === PatientStatus.WAITING).length})</Tab>
+                            <Tab>In Appointment ({patients.filter(p => p.status === PatientStatus.IN_APPOINTMENT).length})</Tab>
+                            <Tab>Awaiting Results ({patients.filter(p => p.status === PatientStatus.AWAITING_RESULTS).length})</Tab>
+                            <Tab>Ready for Discharge ({patients.filter(p => p.status === PatientStatus.READY_FOR_DISCHARGE).length})</Tab>
+                        </TabList>
+
+                        <TabPanels>
+                            <TabPanel>
+                                {renderPatientTable(PatientStatus.WAITING)}
+                            </TabPanel>
+                            <TabPanel>
+                                {renderPatientTable(PatientStatus.IN_APPOINTMENT)}
+                            </TabPanel>
+                            <TabPanel>
+                                {renderPatientTable(PatientStatus.AWAITING_RESULTS)}
+                            </TabPanel>
+                            <TabPanel>
+                                {renderPatientTable(PatientStatus.READY_FOR_DISCHARGE)}
+                            </TabPanel>
+                        </TabPanels>
+                    </Tabs>
                 </Box>
-        </Box>
+            </Stack>
+            </Box>
+    
     );
 };

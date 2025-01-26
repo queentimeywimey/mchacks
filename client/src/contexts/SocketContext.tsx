@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { Patient, PatientUpdate } from '../types';
+import { Patient, PatientUpdate, PatientStatus } from '../types';
 
 interface SocketContextType {
     socket: Socket | null;
@@ -11,7 +11,7 @@ interface SocketContextType {
     addPatient: (name: string, symptoms: string[], triageLevel: 1 | 2 | 3 | 4 | 5) => Promise<string>;
     updateSymptoms: (update: PatientUpdate) => void;
     updateTriageLevel: (patientId: string, triageLevel: 1 | 2 | 3 | 4 | 5) => void;
-    removePatient: (patientId: string) => void;
+    updateStatus: (patientId: string, status: PatientStatus) => void;
     getPatient: (patientId: string) => Promise<Patient | null>;
     patients: Patient[];
 }
@@ -23,6 +23,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const [isConnected, setIsConnected] = useState(false);
     const [isProvider, setIsProvider] = useState(false);
     const [patients, setPatients] = useState<Patient[]>([]);
+
 
     useEffect(() => {
         const newSocket = io('http://localhost:3001');
@@ -84,11 +85,6 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         socket.emit('update-symptoms', update);
     };
 
-    const removePatient = (patientId: string) => {
-        if (!socket) return;
-        socket.emit('remove-patient', patientId);
-    };
-
     const getPatient = async (patientId: string): Promise<Patient | null> => {
         if (!socket) return null;
 
@@ -104,6 +100,11 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         socket.emit('update-triage-level', { patientId, triageLevel });
     };
 
+    const updateStatus = (patientId: string, status: PatientStatus) => {
+        if (!socket) return;
+        socket.emit('update-status', { patientId, status });
+    };
+
     const value = {
         socket,
         isConnected,
@@ -113,7 +114,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         addPatient,
         updateSymptoms,
         updateTriageLevel,
-        removePatient,
+        updateStatus,
         getPatient,
         patients
     };

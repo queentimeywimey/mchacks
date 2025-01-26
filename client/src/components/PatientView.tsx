@@ -11,7 +11,8 @@ import {
     VStack,
     Badge,
     Textarea,
-    Progress,
+    HStack,
+    Progress
     Step,
     StepDescription,
     StepIcon,
@@ -25,7 +26,7 @@ import {
 } from '@chakra-ui/react';
 
 import { useSocket } from '../contexts/SocketContext';
-import { Patient, TRIAGE_LEVELS } from '../types';
+import { Patient, TRIAGE_LEVELS, PATIENT_STATUS_LABELS } from '../types';
 const four_steps = [
     { title: 'Registration and Triage', description: 'Get registered into the management system and get assigned a triage.' },
     { title: 'The First Wait', description: 'Wait to be seen by a doctor.' },
@@ -137,7 +138,8 @@ export const PatientView: React.FC = () => {
             <Stack spacing={6} maxW="600px" mx="auto">
                 <Box>
                     <Text fontSize="2xl" mb={2}>Welcome, {patient.name}</Text>
-                    <Progress hasStripe value={50} mb={2}
+                    <HStack spacing={4}>
+                        <Progress hasStripe value={50} mb={2}
                     colorScheme={
                         patient.triageLevel === 1
                             ? 'blue'
@@ -150,22 +152,28 @@ export const PatientView: React.FC = () => {
                             : 'gray'
                     }/>
                     <Badge
-                        colorScheme={
-                            patient.triageLevel === 1
-                                ? 'blue'
-                                : patient.triageLevel === 2
-                                ? 'red'
-                                : patient.triageLevel === 3
-                                ? 'yellow'
-                                : patient.triageLevel === 4
-                                ? 'green'
-                                : 'gray'
-                        }
-                        fontSize="md"
-                        p={2}
-                    >
-                        Triage Level: {patient.triageLevel} - {TRIAGE_LEVELS[patient.triageLevel]}
-                    </Badge>
+                            colorScheme={
+                                patient.triageLevel <= 2
+                                    ? 'red'
+                                    : patient.triageLevel === 3
+                                    ? 'yellow'
+                                    : 'green'
+                            }
+                            fontSize="md"
+                            p={2}
+                            textTransform="none"
+                        >
+                            Triage Level: {patient.triageLevel} - {TRIAGE_LEVELS[patient.triageLevel]}
+                        </Badge>
+                        <Badge
+                            colorScheme="purple"
+                            fontSize="md"
+                            p={2}
+                            textTransform="none"
+                        >
+                            Status: {PATIENT_STATUS_LABELS[patient.status]}
+                        </Badge>
+                    </HStack>
                 </Box>
 
                 <Box>
