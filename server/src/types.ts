@@ -1,3 +1,17 @@
+export enum PatientStatus {
+    WAITING = 'WAITING',
+    IN_APPOINTMENT = 'IN_APPOINTMENT',
+    AWAITING_RESULTS = 'AWAITING_RESULTS',
+    READY_FOR_DISCHARGE = 'READY_FOR_DISCHARGE'
+}
+
+export const PATIENT_STATUS_LABELS = {
+    [PatientStatus.WAITING]: 'Waiting',
+    [PatientStatus.IN_APPOINTMENT]: 'In Appointment',
+    [PatientStatus.AWAITING_RESULTS]: 'Awaiting Results',
+    [PatientStatus.READY_FOR_DISCHARGE]: 'Ready for Discharge'
+};
+
 export interface Patient {
     id: string;
     name: string;
@@ -6,6 +20,7 @@ export interface Patient {
     registrationTime: Date;
     lastUpdated: Date;
     estimatedWaitTime: number; // in minutes
+    status: PatientStatus;
 }
 
 export interface PatientUpdate {
@@ -14,11 +29,3 @@ export interface PatientUpdate {
 }
 
 export const PROVIDER_PASSWORD = "admin123"; // In a real app, this would be properly hashed and stored securely
-
-export const TRIAGE_WAIT_TIMES = {
-    1: 0,      // Immediate
-    2: 10,     // Emergent
-    3: 30,     // Urgent
-    4: 60,     // Less Urgent
-    5: 120     // Non-Urgent
-};

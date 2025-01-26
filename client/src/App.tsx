@@ -22,9 +22,9 @@ function App() {
         <Box minH="100vh" bg="gray.50">
           <Box bg="blue.500" color="white" p={4} shadow="md">
             <Flex maxW="1200px" mx="auto" justify="space-between" align="center">
-              <HStack>
+              <HStack spacing={3}>
                 <Heading size="lg">Welcome to Springfield Hospital</Heading>
-                <Heading fontSize="md" fontStyle="italic" fontWeight="light" >Where People Come First</Heading>
+                <Heading fontSize="18" fontStyle="italic" fontWeight="light" >Where People Come First</Heading>
               </HStack>
               <Flex gap={4}>
                 <Button

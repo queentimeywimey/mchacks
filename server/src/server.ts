@@ -2,7 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import { Patient, PatientUpdate, PROVIDER_PASSWORD, TRIAGE_WAIT_TIMES } from './types';
+import { Patient, PatientUpdate, PROVIDER_PASSWORD, PatientStatus } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
@@ -23,20 +23,26 @@ const betweenTime = 5;
 
 // Update wait times for all patients
 const updateWaitTimes = () => {
-    for(var i = 0; i < patients.length; i++){
-        patients[i].estimatedWaitTime = i * betweenTime;
+    const waitingPatients = patients.filter(p => p.status === PatientStatus.WAITING);
+    for(var i = 0; i < waitingPatients.length; i++){
+        waitingPatients[i].estimatedWaitTime = i * betweenTime;
     }
 };
 
 const updateQueue = (p: Patient) => {
+    if (p.status !== PatientStatus.WAITING) {
+        patients.push(p);
+        return;
+    }
+
     for(var i = 0; i < patients.length; i++){
-        if (p.triageLevel < patients[i].triageLevel){
+        if (patients[i].status !== PatientStatus.WAITING || p.triageLevel < patients[i].triageLevel){
             patients.splice(i, 0, p);
             return;
         }
     }
-    patients.push(p)
-}
+    patients.push(p);
+};
 
 // Socket.IO connection handling
 io.on('connection', (socket: any) => {
@@ -57,13 +63,30 @@ io.on('connection', (socket: any) => {
             triageLevel: data.triageLevel,
             registrationTime: new Date(),
             lastUpdated: new Date(),
-            estimatedWaitTime: -1
+            estimatedWaitTime: -1,
+            status: PatientStatus.WAITING
         };
         
         updateQueue(newPatient);
         updateWaitTimes();
         io.emit('patients-updated', patients);
         callback({ success: true, patientId: newPatient.id });
+    });
+
+    // Update patient status
+    socket.on('update-status', (data: { patientId: string, status: PatientStatus }) => {
+        const patient = patients.find(p => p.id === data.patientId);
+        if (patient) {
+            const index = patients.findIndex(p => p.id === data.patientId);
+            if (index !== -1) {
+                patients.splice(index, 1);
+                patient.status = data.status;
+                patient.lastUpdated = new Date();
+                updateQueue(patient);
+                updateWaitTimes();
+                io.emit('patients-updated', patients);
+            }
+        }
     });
 
     // Update patient triage level
@@ -117,4 +140,4 @@ io.on('connection', (socket: any) => {
 const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-})
+});
