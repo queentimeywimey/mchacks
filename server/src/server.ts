@@ -14,7 +14,12 @@ const io = new Server(httpServer, {
     }
 });
 
-app.use(cors());
+const API_URL = process.env.REACT_APP_API_URL;
+fetch(`${API_URL}/api/data`)
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+app.use(cors({ origin: "https://mchacks-rho.vercel.app/" }));
 app.use(express.json());
 
 // In-memory storage
