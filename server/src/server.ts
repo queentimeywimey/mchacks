@@ -19,6 +19,17 @@ fetch(`${API_URL}/api/data`)
   .then(response => response.json())
   .then(data => console.log(data));
 
+const fetchData = async () => {
+    const response = await fetch(`${API_URL}/api/data`);
+    const text = await response.text(); // Get raw response
+
+    console.log("Raw response:", text); // Log it to see if it's JSON or an error page
+
+    const data = JSON.parse(text); // Parse JSON if valid
+};
+
+fetchData();
+
 app.use(cors({ origin: "https://mchacks-rho.vercel.app/" }));
 app.use(express.json());
 
