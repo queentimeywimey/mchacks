@@ -1,4 +1,7 @@
 import express from 'express';
+import dotenv from 'dotenv';
+
+dotenv.config();
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
@@ -15,20 +18,18 @@ const io = new Server(httpServer, {
 });
 
 const API_URL = process.env.REACT_APP_API_URL;
+console.log(API_URL);
+console.log("yahoo");
+
 fetch(`${API_URL}/api/data`)
-  .then(response => response.json())
-  .then(data => console.log(data));
-
-const fetchData = async () => {
-    const response = await fetch(`${API_URL}/api/data`);
-    const text = await response.text(); // Get raw response
-
-    console.log("Raw response:", text); // Log it to see if it's JSON or an error page
-
-    const data = JSON.parse(text); // Parse JSON if valid
-};
-
-fetchData();
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => console.log(data))
+  .catch(error => console.error('Error fetching data:', error));
 
 app.use(cors({ origin: "https://mchacks-rho.vercel.app/" }));
 app.use(express.json());
