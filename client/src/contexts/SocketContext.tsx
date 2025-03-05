@@ -27,7 +27,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
 
     useEffect(() => {
-        const newSocket = io('http://localhost:3001');
+        const newSocket = io('https://mchacks-1.onrender.com');
 
         newSocket.on('connect', () => {
             setIsConnected(true);
